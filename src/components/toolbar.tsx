@@ -20,7 +20,6 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
-// import { ScrollArea } from "./ui/scroll-area"
 import { otherFonts, recommendedFonts } from "@/lib/constants"
 import { CheckIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -97,23 +96,28 @@ export function Toolbar({
     <div className="max-w-[100vw] px-5">
       <div className="no-scrollbar w-full overflow-x-auto rounded-full border bg-white sm:overflow-visible">
         <div className="flex items-center space-x-2 p-2 text-2xl md:justify-center">
+          {/* Background Button */}
           <Button
             {...getRootProps()}
             variant="outline"
-            size={"icon"}
+            size="icon"
             className="rounded-full hover:animate-jelly tooltip shrink-0"
+            aria-label="Upload background image"
           >
             <span className="tooltiptext">Background</span>
             <input {...getInputProps()} />
             <Icons.background className="size-4" />
           </Button>
+
+          {/* Background Color Picker */}
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
-                size={"icon"}
-                className="rounded-full hover:animate-jelly tooltip shrink-0 "
+                size="icon"
+                className="rounded-full hover:animate-jelly tooltip shrink-0"
                 style={{ backgroundColor: currentBackgroundColor }}
+                aria-label="Change background color"
               >
                 <span className="tooltiptext">Color</span>
               </Button>
@@ -125,27 +129,32 @@ export function Toolbar({
               <HexColorPicker
                 className="border-none"
                 color={currentBackgroundColor}
-                onChange={(color: string) => {
-                  return changeBackgroundColor(color)
-                }}
+                onChange={changeBackgroundColor}
               />
             </PopoverContent>
           </Popover>
+
           <div className="h-5">
             <div className="mx-1.5 h-full w-px bg-[#e5e5e5]"></div>
           </div>
+
+          {/* High Guy Button */}
           <Button
             onClick={addChillGuy}
             variant="outline"
-            size={"icon"}
+            size="icon"
             className="rounded-full hover:animate-jelly tooltip shrink-0"
+            aria-label="Add High Guy"
           >
-            <span className="tooltiptext">Chill Guy</span>
+            <span className="tooltiptext">High Guy</span>
             <img
               src={`${process.env.NEXT_PUBLIC_APP_URL}/chillguy.png`}
               className="size-6"
+              alt="High Guy icon"
             />
           </Button>
+
+          {/* Image Tools */}
           <AnimatePresence>
             {isImageSelected && (
               <motion.div
@@ -163,17 +172,19 @@ export function Toolbar({
                 <Button
                   onClick={() => flipImage("horizontal")}
                   variant="outline"
-                  size={"icon"}
+                  size="icon"
                   className="rounded-full hover:animate-jelly tooltip shrink-0"
+                  aria-label="Flip image"
                 >
                   <span className="tooltiptext">Flip</span>
                   <Icons.flip className="size-4" />
                 </Button>
                 <Button
-                  onClick={() => toggleFilter()}
+                  onClick={toggleFilter}
                   variant="outline"
-                  size={"icon"}
-                  className="rounded-full hover:animate-jelly tooltip shrink-0 "
+                  size="icon"
+                  className="rounded-full hover:animate-jelly tooltip shrink-0"
+                  aria-label="Apply filters"
                 >
                   <Icons.filters className="size-4" />
                   <span className="tooltiptext">Filters</span>
@@ -181,18 +192,23 @@ export function Toolbar({
               </motion.div>
             )}
           </AnimatePresence>
+
           <div className="h-5">
             <div className="mx-1.5 h-full w-px bg-[#e5e5e5]"></div>
           </div>
+
+          {/* Text Tools */}
           <Button
             onClick={addText}
             variant="outline"
-            size={"icon"}
+            size="icon"
             className="rounded-full hover:animate-jelly tooltip shrink-0"
+            aria-label="Add text"
           >
             <span className="tooltiptext">Text</span>
             <Icons.text className="size-4" />
           </Button>
+
           <AnimatePresence>
             {selectedTextProperties.isTextSelected && (
               <motion.div
@@ -207,12 +223,14 @@ export function Toolbar({
                 }}
                 className="flex items-center space-x-2"
               >
+                {/* Font Family Selector */}
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
-                      size={"icon"}
+                      size="icon"
                       className="rounded-full hover:animate-jelly tooltip shrink-0"
+                      aria-label="Change font family"
                     >
                       <span className="tooltiptext">Font Family</span>
                       <Icons.font className="size-4" />
@@ -227,83 +245,63 @@ export function Toolbar({
                       <CommandList className="hide_scrollbar">
                         <CommandEmpty>No font family found.</CommandEmpty>
                         <CommandGroup heading="Recommended">
-                          {/* <ScrollArea className="h-[250px] w-full"> */}
-                          {recommendedFonts.map((fontName) => {
-                            return (
-                              <CommandItem
-                                key={fontName}
-                                value={fontName}
-                                className={cn("cursor-pointer")}
-                                onSelect={(currentValue) => {
-                                  changeFontFamily(currentValue)
-                                }}
-                              >
-                                <span
-                                  style={{
-                                    fontFamily: `'${fontName}', sans-serif`,
-                                  }}
-                                >
-                                  {fontName}
-                                </span>
-                                <CheckIcon
-                                  className={cn(
-                                    "ml-auto size-4",
-                                    fontName ===
-                                      selectedTextProperties.fontFamily
-                                      ? "opacity-100"
-                                      : "opacity-0",
-                                  )}
-                                />
-                              </CommandItem>
-                            )
-                          })}
+                          {recommendedFonts.map((fontName) => (
+                            <CommandItem
+                              key={fontName}
+                              value={fontName}
+                              className="cursor-pointer"
+                              onSelect={changeFontFamily}
+                            >
+                              <span style={{ fontFamily: `'${fontName}', sans-serif` }}>
+                                {fontName}
+                              </span>
+                              <CheckIcon
+                                className={cn(
+                                  "ml-auto size-4",
+                                  fontName === selectedTextProperties.fontFamily
+                                    ? "opacity-100"
+                                    : "opacity-0",
+                                )}
+                              />
+                            </CommandItem>
+                          ))}
                         </CommandGroup>
                         <CommandGroup heading="Others">
-                          {/* <ScrollArea className="h-[250px] w-full"> */}
-                          {otherFonts.map((fontName) => {
-                            return (
-                              <CommandItem
-                                key={fontName}
-                                value={fontName}
-                                className={cn("cursor-pointer")}
-                                onSelect={(currentValue) => {
-                                  changeFontFamily(currentValue)
-                                }}
-                              >
-                                <span
-                                  style={{
-                                    fontFamily: `'${fontName}', sans-serif`,
-                                  }}
-                                >
-                                  {fontName}
-                                </span>
-                                <CheckIcon
-                                  className={cn(
-                                    "ml-auto size-4",
-                                    fontName ===
-                                      selectedTextProperties.fontFamily
-                                      ? "opacity-100"
-                                      : "opacity-0",
-                                  )}
-                                />
-                              </CommandItem>
-                            )
-                          })}
-                          {/* </ScrollArea> */}
+                          {otherFonts.map((fontName) => (
+                            <CommandItem
+                              key={fontName}
+                              value={fontName}
+                              className="cursor-pointer"
+                              onSelect={changeFontFamily}
+                            >
+                              <span style={{ fontFamily: `'${fontName}', sans-serif` }}>
+                                {fontName}
+                              </span>
+                              <CheckIcon
+                                className={cn(
+                                  "ml-auto size-4",
+                                  fontName === selectedTextProperties.fontFamily
+                                    ? "opacity-100"
+                                    : "opacity-0",
+                                )}
+                              />
+                            </CommandItem>
+                          ))}
                         </CommandGroup>
                       </CommandList>
                     </Command>
                   </PopoverContent>
                 </Popover>
+
+                {/* Text Color Picker */}
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
-                      size={"icon"}
-                      className="rounded-full hover:animate-jelly tooltip shrink-0 "
-                      style={{
-                        backgroundColor: selectedTextProperties.fontColor,
-                      }}
+                      size="icon"
+                      className="rounded-full hover:animate-jelly tooltip shrink-0"
+                      style={{ backgroundColor: selectedTextProperties.fontColor }}
+                      aria-label="Change text color"
                     >
                       <span className="tooltiptext">Text Color</span>
                     </Button>
@@ -315,31 +313,33 @@ export function Toolbar({
                     <HexColorPicker
                       className="border-none"
                       color={selectedTextProperties.fontColor}
-                      onChange={(color: string) => {
-                        return changeTextColor(color)
-                      }}
+                      onChange={changeTextColor}
                     />
                   </PopoverContent>
                 </Popover>
               </motion.div>
             )}
           </AnimatePresence>
+
           <div className="h-5">
             <div className="mx-1.5 h-full w-px bg-[#e5e5e5]"></div>
           </div>
+
+          {/* Drawing Tools */}
           <Button
             onClick={toggleDrawingMode}
             variant="outline"
             size="icon"
             className={cn(
               "rounded-full hover:animate-jelly tooltip shrink-0",
-              drawingSettings.isDrawing &&
-                "ring-2 ring-green-500 ring-offset-2",
+              drawingSettings.isDrawing && "ring-2 ring-green-500 ring-offset-2",
             )}
+            aria-label="Toggle drawing mode"
           >
             <span className="tooltiptext">Draw</span>
-            <Icons.draw className="size-4 " />
+            <Icons.draw className="size-4" />
           </Button>
+
           <AnimatePresence>
             {drawingSettings.isDrawing && (
               <motion.div
@@ -359,6 +359,7 @@ export function Toolbar({
                   variant="outline"
                   size="icon"
                   className="rounded-full hover:animate-jelly tooltip shrink-0"
+                  aria-label="Change brush size"
                 >
                   <span className="tooltiptext">Brush Size</span>
                   {drawingSettings.brushSize}
@@ -367,9 +368,10 @@ export function Toolbar({
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
-                      size={"icon"}
-                      className="rounded-full hover:animate-jelly tooltip shrink-0 "
+                      size="icon"
+                      className="rounded-full hover:animate-jelly tooltip shrink-0"
                       style={{ backgroundColor: drawingSettings.brushColor }}
+                      aria-label="Change brush color"
                     >
                       <span className="tooltiptext">Brush Color</span>
                     </Button>
@@ -381,39 +383,46 @@ export function Toolbar({
                     <HexColorPicker
                       className="border-none"
                       color={drawingSettings.brushColor}
-                      onChange={(color: string) => {
-                        return setBrushColor(color)
-                      }}
+                      onChange={setBrushColor}
                     />
                   </PopoverContent>
                 </Popover>
               </motion.div>
             )}
           </AnimatePresence>
+
           <div className="h-5">
             <div className="mx-1.5 h-full w-px bg-[#e5e5e5]"></div>
           </div>
+
+          {/* Delete Button */}
           <Button
             onClick={deleteSelectedObject}
             variant="outline"
-            size={"icon"}
+            size="icon"
             className="rounded-full hover:animate-jelly tooltip shrink-0"
+            aria-label="Delete selected object"
           >
             <span className="tooltiptext">Delete</span>
             <Icons.trash className="size-4 text-red-600" />
           </Button>
+
           <div className="h-5">
             <div className="mx-1.5 h-full w-px bg-[#e5e5e5]"></div>
           </div>
+
+          {/* Download Button */}
           <Button
             onClick={downloadCanvas}
             variant="outline"
-            size={"icon"}
+            size="icon"
             className="rounded-full hover:animate-jelly tooltip shrink-0"
+            aria-label="Download canvas"
           >
             <span className="tooltiptext">Download</span>
             <Icons.download className="size-4" />
           </Button>
+
           {isMobile && (
             <div className="h-5 invisible">
               <div className="h-full w-px bg-[#e5e5e5]"></div>
