@@ -57,10 +57,10 @@ export default function HomePage() {
           <div className="flex flex-col justify-center text-center items-center text-sm md:flex-row">
             <a
               className="text-balance leading-loose text-muted-foreground  font-medium hover:text-blue-700"
-              href="https://x.com/intent/follow?screen_name=sujjeeee"
+              href="https://x.com/intent/follow?screen_name=wizardofhahz"
               target="_blank"
             >
-              Built by Sujjeee
+              Built by Wizard of Hahz
             </a>
           </div>
         </div>
